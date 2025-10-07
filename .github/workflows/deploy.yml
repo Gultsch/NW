@@ -1,0 +1,56 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - master  # 或者 main，根据你的主分支名称
+
+# 设置 GITHUB_TOKEN 的权限
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 只允许一个并发部署
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. 检出代码
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2. 设置 Node.js 环境
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'  # 根据你的项目需求调整版本
+          cache: 'npm'  # 或 'yarn' / 'pnpm'
+
+      # 3. 安装依赖
+      - name: Install dependencies
+        run: npm install  # 或 npm install / yarn install / pnpm install
+
+      # 4. 构建项目
+      - name: Build
+        run: npm run build  # 确保 package.json 中有 build 脚本
+
+      # 5. 配置 GitHub Pages
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      # 6. 上传构建产物
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist  # Vue3 默认输出目录
+
+      # 7. 部署到 GitHub Pages
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
