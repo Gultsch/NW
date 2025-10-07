@@ -3,15 +3,13 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - master  # 或者 main，根据你的主分支名称
+      - master
 
-# 设置 GITHUB_TOKEN 的权限
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# 只允许一个并发部署
 concurrency:
   group: pages
   cancel-in-progress: false
@@ -39,21 +37,12 @@ jobs:
       - name: Install dependencies
         run: pnpm i --frozen-lockfile
 
-      # 4. 构建项目
       - name: Build
         run: pnpm build
 
-      # 5. 配置 GitHub Pages
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-
-      # 6. 上传构建产物
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./dist  # Vue3 默认输出目录
-
-      # 7. 部署到 GitHub Pages
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: gh-pages
