@@ -10,7 +10,7 @@
       <div id="hint">欢迎来到南武世界，点击图标前往你感兴趣的部分</div>
       <div id="icons">
         <a class="icon" v-for="item in icons" :href="item.url">
-          <img :src="`${import.meta.env.BASE_URL}assets/icons/${item.icon}.png`"/>
+          <img :src="`${baseUrl}assets/icons/${item.icon}.png`"/>
           <div class="icon-text">{{ item.text }}</div>
         </a>
       </div>
@@ -38,6 +38,8 @@ import {ref, onMounted, onUnmounted} from "vue"
 
 const currentTime = ref<string>('')
 let timer: number | null = null
+
+const baseUrl = import.meta.env.BASE_URL
 
 const icons: { icon: string; text: string; url: string }[] = [
   {icon: "wiki", text: "维基", url:"https://wiki.cjack.top/wiki/"},
