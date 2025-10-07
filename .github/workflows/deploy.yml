@@ -21,24 +21,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. 检出代码
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 2. 设置 Node.js 环境
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'  # 根据你的项目需求调整版本
-          cache: 'pnpm'  # 或 'yarn' / 'pnpm'
+          node-version: '20'
+          cache: 'pnpm'
 
-      # 3. 安装依赖
       - name: Install dependencies
-        run: pnpm i  # 或 npm install / yarn install / pnpm install
+        run: pnpm i --frozen-lockfile
 
       # 4. 构建项目
       - name: Build
-        run: pnpm build  # 确保 package.json 中有 build 脚本
+        run: pnpm build
 
       # 5. 配置 GitHub Pages
       - name: Setup Pages
